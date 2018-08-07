@@ -1,9 +1,33 @@
 import os
 import boto3
 import json
+from os import listdir, getcwd
+from os.path import isfile, join
 
 #TODO:Have to double check how I want to do credentials
 s3 = boto3.resource('s3')
+s3_bucket = None
+config_file = None
+
+def load_s3_bucket_object():
+    global s3_bucket
+
+    if config_file is None:
+        load_config_file()
+
+    s3_bucket = s3.Bucket(config_file['BucketName'])
+
+def put_directory_in_bucket():
+    global s3_bucket
+
+    if s3_bucket is None:
+        load_s3_bucket_object()
+
+    current_path = getcwd()
+    files_only = [f for f in listdir(current_path) if isfile(join(current_path, f))]
+
+    for fn in files_only:
+        s3_bucket.upload_file(fn, fn, ExtraArgs={'ACL':'public-read', 'ContentType':'text/html'})
 
 def get_bucket_objects(bucket):
     response =  s3.meta.client.list_objects(
@@ -22,12 +46,14 @@ def push_files_to_s3(filename, bucket, filename_key):
 
 def load_config_file():
     #TODO: Read a config file. Currently only check current directory
+    global config_file
     with open('aws_site_maker.json') as f:
-        config = json.load(f)
+        config_file = json.load(f)
 
-    return config
 
-config_file = load_config_file()
-contents = get_bucket_objects(config_file['BucketName'])
+load_config_file()
 
-print(contents)
+put_directory_in_bucket()
+#contents = get_bucket_objects(config_file['BucketName'])
+
+#print(contents)
