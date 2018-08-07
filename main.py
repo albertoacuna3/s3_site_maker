@@ -9,9 +9,9 @@ def get_bucket_objects(bucket):
     response =  s3.meta.client.list_objects(
         Bucket=bucket
     )
-
-    if response:
-        return response['Contents']
+    contents =response['Contents']
+    formatted_contents = [{'Key': d['Key'], 'Size': d['Size'], 'LastModified': d['LastModified'].strftime("%B %d, %Y")} for d in contents]
+    return formatted_contents
 
 def get_current_directory():
     return os.getcwd()
