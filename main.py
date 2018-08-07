@@ -1,9 +1,17 @@
+import os
 import boto3
 import json
 
 #TODO:Have to double check how I want to do credentials
-client = boto3.Client()
 s3 = boto3.resource('s3')
+
+def get_bucket_objects(bucket):
+    response =  s3.meta.client.list_objects(
+        Bucket=bucket
+    )
+
+    if response:
+        return response['Contents']
 
 def get_current_directory():
     return os.getcwd()
@@ -19,3 +27,7 @@ def load_config_file():
 
     return config
 
+config_file = load_config_file()
+contents = get_bucket_objects(config_file['BucketName'])
+
+print(contents)
