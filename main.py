@@ -27,7 +27,18 @@ def put_directory_in_bucket():
     files_only = [f for f in listdir(current_path) if isfile(join(current_path, f))]
 
     for fn in files_only:
-        s3_bucket.upload_file(fn, fn, ExtraArgs={'ACL':'public-read', 'ContentType':'text/html'})
+        filename, file_extension = os.path.splitext(fn)
+        s3_bucket.upload_file(fn, fn, ExtraArgs={'ACL':'public-read', 'ContentType':get_file_content_type(file_extension[1:])})
+
+def get_file_content_type(filename_ext):
+    mimetypes = {
+       'html': 'text/html',
+       'json': 'application/json',
+       'css': 'text/css',
+       'other': 'text/plain'
+    }
+
+    return mimetypes.get(filename_ext, mimetypes.get('other'))
 
 def get_bucket_objects(bucket):
     response =  s3.meta.client.list_objects(
