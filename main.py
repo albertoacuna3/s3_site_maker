@@ -40,7 +40,7 @@ class MyBaseController(CementBaseController):
         aws = AWSController()
         aws.put_directory_in_bucket(location, config_file['BucketName'])
 
-    @expose(help='create an s3 bucket')
+    @expose(help='create an s3 bucket', hide=True)
     def create_bucket(self):
         if self.app.pargs.bucket:
             bucket_name = self.app.pargs.bucket
