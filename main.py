@@ -16,7 +16,7 @@ class MyBaseController(CementBaseController):
             (['-l', '--location'], dict(action='store',
                                         help='specify the directory to run on', metavar='STR')),
             (['-c', '--config'], dict(action='store', help='config file name', metavar='STR')),
-            (['-b', '--bucket'], dict(action='store', help='give the bucket name'))
+            (['extra_arguments'], dict(action='store', nargs='*'))
         ]
 
     def load_config_file(self, config_file_path):
@@ -40,10 +40,10 @@ class MyBaseController(CementBaseController):
         aws = AWSController()
         aws.put_directory_in_bucket(location, config_file['BucketName'])
 
-    @expose(help='create an s3 bucket', hide=True)
+    @expose(help='create an s3 bucket', hide=False)
     def create_bucket(self):
-        if self.app.pargs.bucket:
-            bucket_name = self.app.pargs.bucket
+        if self.app.pargs.extra_arguments[0]:
+            bucket_name = self.app.pargs.extra_arguments[0]
         else:
             print('No bucket name was specified')
             return
