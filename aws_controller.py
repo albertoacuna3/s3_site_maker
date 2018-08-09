@@ -45,3 +45,7 @@ class AWSController:
         bucket.upload_file(file_path, key, ExtraArgs={
             'ACL': 'public-read', 'ContentType': self.get_file_content_type(file_extension[1:])})
 
+    def create_s3_bucket(self, bucket_name, acl, bucket_config):
+        self.s3_client.create_bucket(ACL=acl, 
+            Bucket=bucket_name, 
+            CreateBucketConfiguration=bucket_config) 
