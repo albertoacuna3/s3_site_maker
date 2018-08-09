@@ -4,7 +4,8 @@ from cement.core.foundation import CementApp
 from cement.core import hook
 from cement.utils.misc import init_defaults
 from cement.core.controller import CementBaseController, expose
-
+from os.path import join
+import json
 
 class MyBaseController(CementBaseController):
     class Meta:
@@ -12,8 +13,13 @@ class MyBaseController(CementBaseController):
         description = 'Basic Commands for aws_site_maker'
         arguments = [
             (['-l', '--location'], dict(action='store',
-                                        help='specify the directory to run on', metavar='STR'))
+                                        help='specify the directory to run on', metavar='STR')),
+            (['-c', '--config'], dict(action='store', help='config file name', metavar='STR'))
         ]
+
+    def load_config_file(self, config_file_path):
+        with open(config_file_path) as f:
+            return json.load(f)
 
     @expose(help="deploy to s3")
     def deploy(self):
@@ -22,9 +28,15 @@ class MyBaseController(CementBaseController):
         else:
             location = getcwd()
 
-        aws = AWSController(location)
-        aws.put_directory_in_bucket(location)
+        if self.app.pargs.config:
+            config_file_path =  join(location, config)
+        else:
+            config_file_path = join(location, 'aws_site_maker.json')
 
+        config_file = self.load_config_file(config_file_path)
+
+        aws = AWSController()
+        aws.put_directory_in_bucket(location, config_file['BucketName'])
 
 class MyApp(CementApp):
     class Meta:
