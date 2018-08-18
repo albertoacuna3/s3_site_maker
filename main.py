@@ -24,8 +24,7 @@ class MyBaseController(CementBaseController):
         with open(config_file_path) as f:
             return json.load(f)
 
-    @expose(help="deploy to s3")
-    def deploy(self):
+    def get_config_file_path(self):
         if self.app.pargs.location:
             location = self.app.pargs.location
         else:
@@ -36,7 +35,11 @@ class MyBaseController(CementBaseController):
         else:
             config_file_path = join(location, 'aws_site_maker.json')
 
-        config_file = self.load_config_file(config_file_path)
+        return config_file_path
+
+    @expose(help="deploy to s3")
+    def deploy(self):
+        config_file = self.load_config_file(self.get_config_file_path())
 
         aws = AWSController()
         aws.put_directory_in_bucket(location, config_file['BucketName'])
@@ -52,6 +55,19 @@ class MyBaseController(CementBaseController):
         aws = AWSController()
         aws.create_s3_bucket(bucket_name, 'private', {
                              'LocationConstraint': 'us-west-2'})
+
+    @expose(help='undeploy the environment')
+    def undeploy(self):
+        if self.app.pargs.extra_arguments[0]:
+            environment = self.app.pargs.extra_arguments[0]
+        else:
+            print('Please specify an environment')
+            return
+
+        config_file = self.load_config_file(self.get_config_file_path())
+        environment = config_file['Environments'][environment]
+        aws = AWSController()
+        aws.undeploy(environment)
 
 
 class MyApp(CementApp):

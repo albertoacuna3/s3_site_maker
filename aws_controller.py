@@ -53,6 +53,26 @@ class AWSController:
             'ACL': 'public-read', 'ContentType': self.get_file_content_type(file_extension[1:])})
 
     def create_s3_bucket(self, bucket_name, acl, bucket_config):
+<<<<<<< HEAD
         self.s3_client.create_bucket(ACL=acl,
                                      Bucket=bucket_name,
                                      CreateBucketConfiguration=bucket_config)
+=======
+        self.s3_client.create_bucket(ACL=acl, 
+            Bucket=bucket_name, 
+            CreateBucketConfiguration=bucket_config)
+
+    def undeploy(self, environment):
+        for bucket_name in environment.get('Buckets'):
+            response = self.delete_objects_in_bucket(bucket_name)
+
+    def delete_objects_in_bucket(self, bucket_name):
+        bucket = self.s3_client.Bucket(bucket_name)
+
+        object_list = self.get_bucket_objects(bucket_name)
+        object_list = {'Objects' : [{'Key': d['Key']} for d in object_list]}
+
+        response = bucket.delete_objects(Delete=object_list)
+
+        return response
+>>>>>>> 4c1b99a3224907ba242bf8d1ae375026b9ca7182
