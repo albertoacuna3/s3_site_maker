@@ -2,16 +2,23 @@ import os
 import boto3
 import json
 from os import listdir, getcwd
-from os.path import isfile, join
+from os.path import isfile, join, isdir
 
 
 class AWSController:
     def __init__(self):
         self.s3_client = boto3.resource('s3')
 
-    def put_directory_in_bucket(self, dir_location, bucket_name):
+    def put_directory_in_bucket(self, dir_location, bucket_name, is_recursive):
         files_only = [f for f in listdir(
             dir_location) if isfile(join(dir_location, f))]
+
+        child_directories = [f for f in listdir(
+            dir_location) if isdir(join(dir_location, f))]
+
+        if is_recursive:
+            # TODO: Make this recursive
+            pass
 
         for fn in files_only:
             file_path = os.path.join(dir_location, fn)
@@ -27,8 +34,8 @@ class AWSController:
         }
 
         return mimetypes.get(filename_ext, mimetypes.get('other'))
-    
-    #TODO: Needs to be updated
+
+    # TODO: Needs to be updated
     def get_bucket_objects(self, bucket_name):
         response = self.s3_client.meta.client.list_objects(
             Bucket=bucket_name
@@ -46,6 +53,6 @@ class AWSController:
             'ACL': 'public-read', 'ContentType': self.get_file_content_type(file_extension[1:])})
 
     def create_s3_bucket(self, bucket_name, acl, bucket_config):
-        self.s3_client.create_bucket(ACL=acl, 
-            Bucket=bucket_name, 
-            CreateBucketConfiguration=bucket_config) 
+        self.s3_client.create_bucket(ACL=acl,
+                                     Bucket=bucket_name,
+                                     CreateBucketConfiguration=bucket_config)

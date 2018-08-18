@@ -1,4 +1,3 @@
-
 from os import getcwd
 from aws_controller import AWSController
 from cement.core.foundation import CementApp
@@ -8,6 +7,7 @@ from cement.core.controller import CementBaseController, expose
 from os.path import join
 import json
 
+
 class MyBaseController(CementBaseController):
     class Meta:
         label = 'base'
@@ -15,7 +15,8 @@ class MyBaseController(CementBaseController):
         arguments = [
             (['-l', '--location'], dict(action='store',
                                         help='specify the directory to run on', metavar='STR')),
-            (['-c', '--config'], dict(action='store', help='config file name', metavar='STR')),
+            (['-c', '--config'], dict(action='store',
+                                      help='config file name', metavar='STR')),
             (['extra_arguments'], dict(action='store', nargs='*'))
         ]
 
@@ -31,7 +32,7 @@ class MyBaseController(CementBaseController):
             location = getcwd()
 
         if self.app.pargs.config:
-            config_file_path =  join(location, config)
+            config_file_path = join(location, self.app.pargs.config)
         else:
             config_file_path = join(location, 'aws_site_maker.json')
 
@@ -47,9 +48,11 @@ class MyBaseController(CementBaseController):
         else:
             print('No bucket name was specified')
             return
-        
+
         aws = AWSController()
-        aws.create_s3_bucket(bucket_name, 'private', {'LocationConstraint': 'us-west-2'})
+        aws.create_s3_bucket(bucket_name, 'private', {
+                             'LocationConstraint': 'us-west-2'})
+
 
 class MyApp(CementApp):
     class Meta:
