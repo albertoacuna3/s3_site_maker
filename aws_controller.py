@@ -54,6 +54,8 @@ class AWSController:
                 'LocationConstraint': 'us-west-2'})
 
         self.put_directory_in_bucket(main_bucket, None, dir_location, True)
+        #TODO: make it optional to change the index and error files
+        self.make_bucket_website(main_bucket, 'index.html', 'error.html')
 
     def get_file_content_type(self, filename_ext):
         mimetypes = {
@@ -103,3 +105,17 @@ class AWSController:
         response = bucket.delete_objects(Delete=object_list)
 
         return response
+
+    def make_bucket_website(self, bucket_name, index_file, error_file):
+        bucket_website = self.s3_client.BucketWebsite(bucket_name)
+        print('Setting the bucket %s as a website' % bucket_name)
+        bucket_website.put(
+            WebsiteConfiguration={
+                'ErrorDocument': {
+                    'Key': error_file
+                },
+                'IndexDocument': {
+                    'Suffix': index_file
+                }
+            }
+        )
