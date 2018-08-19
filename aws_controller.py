@@ -3,13 +3,14 @@ import boto3
 import json
 from os import listdir, getcwd
 from os.path import isfile, join, isdir
+from botocore.client import ClientError
 
 
 class AWSController:
     def __init__(self):
         self.s3_client = boto3.resource('s3')
 
-    def put_directory_in_bucket(self, dir_location, bucket_name, is_recursive):
+    def put_directory_in_bucket(self, dir_location, bucket_name, is_recursive=False):
         files_only = [f for f in listdir(
             dir_location) if isfile(join(dir_location, f))]
 
@@ -24,6 +25,18 @@ class AWSController:
             file_path = os.path.join(dir_location, fn)
 
             self.upload_file_to_s3_bucket(bucket_name, file_path, fn)
+
+    def deploy(self, dir_location, environment):
+        main_bucket = environment.get('Buckets').get('Main')
+        # response = self.delete_objects_in_bucket(bucket_name)
+        try:
+            self.s3_client.meta.client.head_bucket(Bucket=main_bucket)
+        except ClientError:
+            print("Creating the bucket...")
+            self.create_s3_bucket(main_bucket, 'private', {
+                'LocationConstraint': 'us-west-2'})
+
+        self.put_directory_in_bucket(dir_location, main_bucket, False)
 
     def get_file_content_type(self, filename_ext):
         mimetypes = {
@@ -53,14 +66,9 @@ class AWSController:
             'ACL': 'public-read', 'ContentType': self.get_file_content_type(file_extension[1:])})
 
     def create_s3_bucket(self, bucket_name, acl, bucket_config):
-<<<<<<< HEAD
         self.s3_client.create_bucket(ACL=acl,
                                      Bucket=bucket_name,
                                      CreateBucketConfiguration=bucket_config)
-=======
-        self.s3_client.create_bucket(ACL=acl, 
-            Bucket=bucket_name, 
-            CreateBucketConfiguration=bucket_config)
 
     def undeploy(self, environment):
         for bucket_name in environment.get('Buckets'):
@@ -70,9 +78,8 @@ class AWSController:
         bucket = self.s3_client.Bucket(bucket_name)
 
         object_list = self.get_bucket_objects(bucket_name)
-        object_list = {'Objects' : [{'Key': d['Key']} for d in object_list]}
+        object_list = {'Objects': [{'Key': d['Key']} for d in object_list]}
 
         response = bucket.delete_objects(Delete=object_list)
 
         return response
->>>>>>> 4c1b99a3224907ba242bf8d1ae375026b9ca7182

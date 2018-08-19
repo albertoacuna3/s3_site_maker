@@ -1,0 +1,13 @@
+{
+	"Environments": {
+		"dev": {
+			"Buckets": {
+				"Main": "albertoacuna.com.test",
+				"Secondary": [
+					"mys3bucketalbert",
+					"cloudgurutestwebsite"
+				]
+			}
+		}
+	}
+}

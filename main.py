@@ -39,10 +39,21 @@ class MyBaseController(CementBaseController):
 
     @expose(help="deploy to s3")
     def deploy(self):
+        if self.app.pargs.extra_arguments[0]:
+            environment = self.app.pargs.extra_arguments[0]
+        else:
+            print('Please specify an environment')
+            return
+
         config_file = self.load_config_file(self.get_config_file_path())
 
+        if self.app.pargs.location:
+            location = self.app.pargs.location
+        else:
+            location = getcwd()
+
         aws = AWSController()
-        aws.put_directory_in_bucket(location, config_file['BucketName'])
+        aws.deploy(location, config_file['Environments'][environment])
 
     @expose(help='create an s3 bucket', hide=False)
     def create_bucket(self):
