@@ -109,7 +109,8 @@ class AWSController:
     def make_bucket_website(self, bucket_name, index_file, error_file):
         bucket_website = self.s3_client.BucketWebsite(bucket_name)
         print('Setting the bucket %s as a website' % bucket_name)
-        bucket_website.put(
+        
+        response = bucket_website.put(
             WebsiteConfiguration={
                 'ErrorDocument': {
                     'Key': error_file
@@ -119,3 +120,7 @@ class AWSController:
                 }
             }
         )
+
+        region = boto3.client('s3').get_bucket_location(Bucket=bucket_name)['LocationConstraint']
+        url = '{0}.s3-website-{1}.amazonaws.com'.format(bucket_name, region)
+        print('The website address is {0}'.format(url))
