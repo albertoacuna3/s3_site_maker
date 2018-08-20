@@ -6,7 +6,7 @@ from cement.utils.misc import init_defaults
 from cement.core.controller import CementBaseController, expose
 from os.path import join
 import json
-
+from core import Core
 
 class MyBaseController(CementBaseController):
     class Meta:
@@ -36,6 +36,11 @@ class MyBaseController(CementBaseController):
             config_file_path = join(location, 'aws_site_maker.json')
 
         return config_file_path
+
+    @expose(help='Initiate the aws_site_maker settings')
+    def init(self):
+        core = Core()
+        core.init()        
 
     @expose(help="deploy to s3")
     def deploy(self):

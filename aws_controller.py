@@ -1,6 +1,6 @@
 from os import listdir
 from os.path import isfile, join, isdir, basename, splitext
-
+import sys
 import boto3
 from botocore.client import ClientError
 
@@ -77,7 +77,19 @@ class AWSController:
                                'LastModified': d['LastModified'].strftime("%B %d, %Y")} for d in contents]
         return formatted_contents
 
+    def check_if_bucket_exists(self, bucket_name):
+        try:
+            boto3.client('s3').head_bucket(Bucket=bucket_name)
+        except ClientError as e:
+            print(e)
+            return False
+
+        return True
+
     def upload_file_to_s3_bucket(self, bucket_name, file_path, key):
+        if not self.check_if_bucket_exists(bucket_name):
+            print('Creating the {0} bucket...'.format(bucket_name)) 
+        
         bucket = self.s3_client.Bucket(bucket_name)
         filename, file_extension = splitext(file_path)
 
