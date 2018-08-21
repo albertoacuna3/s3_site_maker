@@ -11,5 +11,5 @@ class Core:
         print(json.dumps(template, ensure_ascii=False))
 
         with open('aws_site_maker.json', 'w') as f:
-            f.write(json.dumps(template, ensure_ascii=False))
+            f.write(json.dump(template, ensure_ascii=False))
 
