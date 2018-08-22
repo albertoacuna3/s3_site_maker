@@ -1,12 +1,11 @@
-from os import getcwd
-from aws_controller import AWSController
-from cement.core.foundation import CementApp
-from cement.core import hook
-from cement.utils.misc import init_defaults
-from cement.core.controller import CementBaseController, expose
-from os.path import join
 import json
+from os import getcwd
+from os.path import join
+from aws_controller import AWSController
+from cement.core.controller import CementBaseController, expose
+from cement.core.foundation import CementApp
 from core import Core
+
 
 class MyBaseController(CementBaseController):
     class Meta:

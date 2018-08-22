@@ -44,18 +44,18 @@ class AWSController:
         return response
 
     def deploy(self, dir_location, environment):
-        main_bucket = environment.get('Buckets').get('Main')
+        bucket = environment.get('Bucket')
         # response = self.delete_objects_in_bucket(bucket_name)
         try:
-            self.s3_client.meta.client.head_bucket(Bucket=main_bucket)
+            self.s3_client.meta.client.head_bucket(Bucket=bucket)
         except ClientError:
             print("Creating the bucket...")
-            self.create_s3_bucket(main_bucket, 'private', {
+            self.create_s3_bucket(bucket, 'private', {
                 'LocationConstraint': 'us-west-2'})
 
-        self.put_directory_in_bucket(main_bucket, None, dir_location, True)
+        self.put_directory_in_bucket(bucket, None, dir_location, True)
         #TODO: make it optional to change the index and error files
-        self.make_bucket_website(main_bucket, 'index.html', 'error.html')
+        self.make_bucket_website(bucket, 'index.html', 'error.html')
 
     def get_file_content_type(self, filename_ext):
         mimetypes = {
@@ -104,8 +104,8 @@ class AWSController:
                                      CreateBucketConfiguration=bucket_config)
 
     def undeploy(self, environment):
-        main_bucket = environment.get('Buckets').get('Main')
-        response = self.delete_objects_in_bucket(main_bucket)
+        bucket = environment.get('Bucket')
+        response = self.delete_objects_in_bucket(bucket)
 
     def delete_objects_in_bucket(self, bucket_name):
         print('Deleting the %s bucket...' % bucket_name)
