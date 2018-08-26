@@ -50,8 +50,12 @@ class AWSController:
             self.s3_client.meta.client.head_bucket(Bucket=bucket)
         except ClientError:
             print("Creating the bucket {0}...".format(bucket))
-            self.create_s3_bucket(bucket, 'public-read', {
-                'LocationConstraint': 'us-west-2'})
+
+            region = boto3.session.Session().region_name
+            self.s3_client.create_bucket(ACL='public-read',
+                                         Bucket=bucket,
+                                         CreateBucketConfiguration={'LocationConstraint': region})
+
 
         self.put_directory_in_bucket(bucket, None, dir_location, True)
         #TODO: make it optional to change the index and error files
@@ -98,10 +102,7 @@ class AWSController:
         bucket.upload_file(file_path, key, ExtraArgs={
             'ACL': 'public-read', 'ContentType': self.get_file_content_type(file_extension[1:])})
 
-    def create_s3_bucket(self, bucket_name, acl, bucket_config):
-        self.s3_client.create_bucket(ACL=acl,
-                                     Bucket=bucket_name,
-                                     CreateBucketConfiguration=bucket_config)
+
 
     def undeploy(self, environment):
         bucket = environment.get('Bucket')

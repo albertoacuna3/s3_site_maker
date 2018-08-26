@@ -5,8 +5,7 @@ import os
 CONFIG_FILE_TEMPLATE = """{
     "Environments" : {
         "dev": {
-            "Bucket" : "*",
-            "Region" : "*"
+            "Bucket" : "*"
         }
     }
 
@@ -39,11 +38,11 @@ class Core:
     #Creates the aws_site_maker.json file
     def init(self):
         bucket_name = input('Enter the bucket name: ')
-        region = input('Enter the region you want to create the bucket in: ')
+        # region = input('Enter the region you want to create the bucket in: ')
 
         config_file_template_obj = json.loads(self.config_file_template)
         config_file_template_obj['Environments']['dev']['Bucket'] = bucket_name
-        config_file_template_obj['Environments']['dev']['Region'] = region
+        # config_file_template_obj['Environments']['dev']['Region'] = region
 
         with open('aws_site_maker.json', 'w') as f:
             json.dump(config_file_template_obj, f)
