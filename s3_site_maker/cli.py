@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json
 from os import getcwd
 from os.path import join
@@ -90,7 +92,6 @@ class MyApp(CementApp):
         label = 'myapp'
         base_controller = 'base'
         handlers = [MyBaseController]
-
 
 with MyApp() as app:
     app.run()

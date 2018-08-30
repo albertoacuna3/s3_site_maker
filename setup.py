@@ -22,7 +22,7 @@ setup(
     name='s3_site_maker',
     version=__version__,
     packages=['s3_site_maker'],
-    install_requires=required,
+    install_requires=required
     #tests_require=test_required,
     #test_suite='nose.collector',
     include_package_data=True,
@@ -32,11 +32,12 @@ setup(
     #url='https://github.com/Miserlou/Zappa',
     author='Alberto Acuna',
     author_email='aacuna3@asu.edu',
-    entry_points={
-        'console_scripts': [
-            's3_site_maker=s3_site_maker.cli'
-        ]
-    },
+    script= [],
+    #entry_points={
+    #    'console_scripts': [
+    #        's3_site_maker=s3_site_maker.cli:handler'
+    #    ]
+    #},
     classifiers=[
         'Environment :: Console',
         'License :: OSI Approved :: Apache Software License',
