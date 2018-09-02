@@ -1,0 +1,3 @@
+[console_scripts]
+s3_site_maker = s3_site_maker.cli:handler
+

@@ -11,5 +11,5 @@ if (python_major_version, python_minor_version) not in SUPPORTED_VERSIONS:
               'S3_Site_Maker supports the following versions of Python: {}'.format(formatted_supported_versions)
     raise RuntimeError(err_msg)
 
-__version__ = '0.0.11'
+__version__ = '0.0.10'
 name = 's3_site_maker'

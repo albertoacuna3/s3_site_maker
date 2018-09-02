@@ -1,4 +1,5 @@
 from setuptools import setup
+import setuptools
 from s3_site_maker import __version__
 import os
 import sys
@@ -21,8 +22,8 @@ with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as f:
 setup(
     name='s3_site_maker',
     version=__version__,
-    packages=['s3_site_maker'],
-    install_requires=required
+    packages=setuptools.find_packages(),
+    #install_requires=required,
     #tests_require=test_required,
     #test_suite='nose.collector',
     include_package_data=True,
@@ -32,12 +33,12 @@ setup(
     #url='https://github.com/Miserlou/Zappa',
     author='Alberto Acuna',
     author_email='aacuna3@asu.edu',
-    script= [],
-    #entry_points={
-    #    'console_scripts': [
-    #        's3_site_maker=s3_site_maker.cli:handler'
-    #    ]
-    #},
+    #script= ['s3_site_maker/cli.py'],
+    entry_points={
+        'console_scripts': [
+            's3_site_maker=s3_site_maker.cli:handler'
+        ]
+    },
     classifiers=[
         'Environment :: Console',
         'License :: OSI Approved :: Apache Software License',
