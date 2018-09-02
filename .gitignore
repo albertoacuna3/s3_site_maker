@@ -7,3 +7,6 @@ ve/
 __pycache__/
 .vscode/
 test/
+build/
+dist/
+*.egg-info

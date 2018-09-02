@@ -3,12 +3,9 @@ import sys
 import os
 
 CONFIG_FILE_TEMPLATE = """{
-    "Environments" : {
-        "dev": {
-            "Bucket" : "*"
-        }
+    "dev": {
+        "s3_bucket" : "*"
     }
-
 }"""
 
 AVAILABLE_REGIONS = {
@@ -41,7 +38,7 @@ class Core:
         # region = input('Enter the region you want to create the bucket in: ')
 
         config_file_template_obj = json.loads(self.config_file_template)
-        config_file_template_obj['Environments']['dev']['Bucket'] = bucket_name
+        config_file_template_obj['dev']['s3_bucket'] = bucket_name
         # config_file_template_obj['Environments']['dev']['Region'] = region
 
         with open('aws_site_maker.json', 'w') as f:
@@ -69,7 +66,7 @@ class Core:
         # response = self.delete_objects_in_bucket(bucket_name)
 
     def get_bucket_name(self):
-        BUCKET_CONST = 'Bucket'
+        BUCKET_CONST = 's3_bucket'
 
         try:
             return self.environment[BUCKET_CONST]

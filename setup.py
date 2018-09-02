@@ -19,21 +19,18 @@ with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as f:
             if 'futures' not in package:
                 required.append(package)
 
+
 setup(
     name='s3_site_maker',
     version=__version__,
-    packages=setuptools.find_packages(),
-    #install_requires=required,
-    #tests_require=test_required,
-    #test_suite='nose.collector',
+    packages=['s3_site_maker'],
+    install_requires=required,
     include_package_data=True,
     license='MIT License',
     description='Create a static webstie in an S3 Bucket',
     long_description=README,
-    #url='https://github.com/Miserlou/Zappa',
     author='Alberto Acuna',
     author_email='aacuna3@asu.edu',
-    #script= ['s3_site_maker/cli.py'],
     entry_points={
         'console_scripts': [
             's3_site_maker=s3_site_maker.cli:handler'
@@ -44,7 +41,6 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        #'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',

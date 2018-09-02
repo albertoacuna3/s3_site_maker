@@ -44,7 +44,7 @@ class AWSController:
         return response
 
     def deploy(self, dir_location, environment):
-        bucket = environment.get('Bucket')
+        bucket = environment.get('s3_bucket')
         # response = self.delete_objects_in_bucket(bucket_name)
         try:
             self.s3_client.meta.client.head_bucket(Bucket=bucket)
@@ -105,7 +105,7 @@ class AWSController:
 
 
     def undeploy(self, environment):
-        bucket = environment.get('Bucket')
+        bucket = environment.get('s3_bucket')
         response = self.delete_objects_in_bucket(bucket)
 
     def delete_objects_in_bucket(self, bucket_name):

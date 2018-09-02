@@ -1,1 +1,1 @@
-{"Environments": {"dev": {"Buckets": {"Main": "TEST"}}}}
+{"dev": {"s3_bucket": "bucketname"}}

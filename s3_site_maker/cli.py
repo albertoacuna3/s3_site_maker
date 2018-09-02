@@ -59,7 +59,7 @@ class MyBaseController(CementBaseController):
             location = getcwd()
 
         aws = AWSController()
-        aws.deploy(location, config_file['Environments'][environment])
+        aws.deploy(location, config_file[environment])
 
     @expose(help='create an s3 bucket', hide=False)
     def create_bucket(self):
@@ -82,7 +82,7 @@ class MyBaseController(CementBaseController):
             return
 
         config_file = self.load_config_file(self.get_config_file_path())
-        environment = config_file['Environments'][environment]
+        environment = config_file[environment]
         aws = AWSController()
         aws.undeploy(environment)
 
