@@ -9,9 +9,9 @@ class AWSController:
     def __init__(self):
         self.s3_client = boto3.resource('s3')
 
-    def put_directory_in_bucket(self, bucket_name, bucket_folder, dir_location, is_recursive=True):
+    def put_directory_in_bucket(self, bucket_name, bucket_folder, dir_location, is_recursive=True, ignore_list=None):
         dir_list = [f for f in listdir(
-            dir_location) ]
+            dir_location) if f not in ignore_list]
 
         for fn in dir_list:
             if isfile(join(dir_location, fn)):
@@ -45,6 +45,8 @@ class AWSController:
 
     def deploy(self, dir_location, environment):
         bucket = environment.get('s3_bucket')
+        ignore_list = environment.get('ignore')
+
         # response = self.delete_objects_in_bucket(bucket_name)
         try:
             self.s3_client.meta.client.head_bucket(Bucket=bucket)
