@@ -11,7 +11,7 @@ class AWSController:
 
     def put_directory_in_bucket(self, bucket_name, bucket_folder, dir_location, is_recursive=True, ignore_list=None):
         dir_list = [f for f in listdir(
-            dir_location) if f not in ignore_list]
+            dir_location)]
 
         if ignore_list is not None:
             dir_list = [f for f in dir_list if f not in ignore_list]
