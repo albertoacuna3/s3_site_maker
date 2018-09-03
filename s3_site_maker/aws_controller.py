@@ -13,6 +13,9 @@ class AWSController:
         dir_list = [f for f in listdir(
             dir_location) if f not in ignore_list]
 
+        if ignore_list is not None:
+            dir_list = [f for f in dir_list if f not in ignore_list]
+
         for fn in dir_list:
             if isfile(join(dir_location, fn)):
                 key = fn
@@ -33,7 +36,8 @@ class AWSController:
                     bucket_name,
                     fn,
                     join(dir_location, basename(fn)),
-                    is_recursive)
+                    is_recursive,
+                    ignore_list)
 
 
     def create_bucket_folder(self, bucket_name, folder_name):
@@ -59,7 +63,7 @@ class AWSController:
                                          CreateBucketConfiguration={'LocationConstraint': region})
 
 
-        self.put_directory_in_bucket(bucket, None, dir_location, True)
+        self.put_directory_in_bucket(bucket, None, dir_location, True, ignore_list)
         #TODO: make it optional to change the index and error files
         self.make_bucket_website(bucket, 'index.html', 'error.html')
 

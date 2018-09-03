@@ -4,7 +4,8 @@ import os
 
 CONFIG_FILE_TEMPLATE = """{
     "dev": {
-        "s3_bucket" : "*"
+        "s3_bucket" : "*",
+        "ignore" : []
     }
 }"""
 
