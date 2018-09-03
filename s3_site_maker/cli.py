@@ -61,18 +61,6 @@ class MyBaseController(CementBaseController):
         aws = AWSController()
         aws.deploy(location, config_file[environment])
 
-    @expose(help='create an s3 bucket', hide=False)
-    def create_bucket(self):
-        if self.app.pargs.extra_arguments[0]:
-            bucket_name = self.app.pargs.extra_arguments[0]
-        else:
-            print('No bucket name was specified')
-            return
-
-        aws = AWSController()
-        aws.create_s3_bucket(bucket_name, 'private', {
-                             'LocationConstraint': 'us-west-2'})
-
     @expose(help='undeploy the environment')
     def undeploy(self):
         if self.app.pargs.extra_arguments[0]:

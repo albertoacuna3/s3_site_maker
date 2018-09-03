@@ -49,6 +49,8 @@ class AWSController:
 
     def deploy(self, dir_location, environment):
         bucket = environment.get('s3_bucket')
+        index_file = environment.get('endpoints').get('index')
+        error_file = environment.get('endpoints').get('error')
         ignore_list = environment.get('ignore')
 
         # response = self.delete_objects_in_bucket(bucket_name)
@@ -64,8 +66,8 @@ class AWSController:
 
 
         self.put_directory_in_bucket(bucket, None, dir_location, True, ignore_list)
-        #TODO: make it optional to change the index and error files
-        self.make_bucket_website(bucket, 'index.html', 'error.html')
+
+        self.make_bucket_website(bucket, index_file, error_file)
 
     def get_file_content_type(self, filename_ext):
         mimetypes = {

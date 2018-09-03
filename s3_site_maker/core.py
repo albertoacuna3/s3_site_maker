@@ -5,7 +5,11 @@ import os
 CONFIG_FILE_TEMPLATE = """{
     "dev": {
         "s3_bucket" : "*",
-        "ignore" : []
+        "ignore" : [],
+        "endpoints": {
+            "index": "*",
+            "error": "*"
+        }
     }
 }"""
 
@@ -36,11 +40,18 @@ class Core:
     #Creates the aws_site_maker.json file
     def init(self):
         bucket_name = input('Enter the bucket name: ')
-        # region = input('Enter the region you want to create the bucket in: ')
+        index_file = input('Name of the index html file (default: index.html): ')
+        error_file = input('Name of the error html file (default: error.html): ')
+
+        if not index_file:
+            index_file = 'index.html'
+        if not error_file:
+            error_file = 'error.html'
 
         config_file_template_obj = json.loads(self.config_file_template)
         config_file_template_obj['dev']['s3_bucket'] = bucket_name
-        # config_file_template_obj['Environments']['dev']['Region'] = region
+        config_file_template_obj['dev']['endpoints']['index'] = index_file
+        config_file_template_obj['dev']['endpoints']['error'] = error_file
 
         with open('aws_site_maker.json', 'w') as f:
             json.dump(config_file_template_obj, f)
