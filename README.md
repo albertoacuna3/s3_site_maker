@@ -1,9 +1,4 @@
-## S3_Site_Maker
-- [About](#about)
-- [Installation and Configuration](#installation-and-configuration)
-  - [Running the Initial Setup / Settings](#running-the-initial-setup--settings)
-- [Basic Usage](#basic-usage)
-  - [Initial Deployments](#initial-deployments)
+# S3_Site_Maker
   
 ## About
 
